@@ -1,103 +1,61 @@
-﻿@model List<BoticaMVC.Models.Medicamento>
+﻿@model BoticaMVC.ViewModels.DashboardVM
 @{
-    ViewData["Title"] = "Medicamentos";
-    var hoy = DateTime.Today;
+    ViewData["Title"] = "Dashboard";
 }
 
-<h2>Medicamentos (Inventario)</h2>
+<div class="dashboard-header mb-4">
+    <h1 class="dashboard-title">Dashboard - Botica</h1>
+    <p class="dashboard-subtitle">Resumen general del inventario de medicamentos activos</p>
+</div>
 
-@if (TempData["ok"] != null)
-{
-    <div class="alert alert-success">@TempData["ok"]</div>
-}
-
-<form method="get" class="row g-2 mb-3">
-    <div class="col-md-5">
-        <input class="form-control" name="q" value="@ViewBag.Q" placeholder="Buscar por nombre, código, lote o laboratorio..." />
+<div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-primary">
+            <div class="summary-card-label">Total medicamentos</div>
+            <div class="summary-card-value">@Model.TotalMedicamentos</div>
+            <div class="summary-card-help">Medicamentos activos registrados</div>
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <select class="form-select" name="orden">
-            <option value="nombre" selected="@(ViewBag.Orden == "nombre")">Orden: Nombre</option>
-            <option value="codigo" selected="@(ViewBag.Orden == "codigo")">Orden: Código</option>
-            <option value="stock" selected="@(ViewBag.Orden == "stock")">Orden: Stock</option>
-            <option value="vence" selected="@(ViewBag.Orden == "vence")">Orden: Vencimiento</option>
-        </select>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-warning">
+            <div class="summary-card-label">Stock bajo</div>
+            <div class="summary-card-value">@Model.StockBajo</div>
+            <div class="summary-card-help">Stock igual o menor al mínimo</div>
+        </div>
     </div>
 
-    <div class="col-md-2 d-flex align-items-center">
-        <input type="checkbox" class="form-check-input me-2" name="soloActivos" value="true" @(ViewBag.SoloActivos ? "checked" : "") />
-        <label class="form-check-label">Solo activos</label>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-danger">
+            <div class="summary-card-label">Vencidos</div>
+            <div class="summary-card-value">@Model.Vencidos</div>
+            <div class="summary-card-help">Medicamentos fuera de fecha</div>
+        </div>
     </div>
 
-    <div class="col-md-3 text-end">
-        <button class="btn btn-outline-primary">Buscar</button>
-        <a class="btn btn-success" asp-action="Create">+ Nuevo</a>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-info">
+            <div class="summary-card-label">Por vencer (30 días)</div>
+            <div class="summary-card-value">@Model.PorVencer30Dias</div>
+            <div class="summary-card-help">Requieren atención inmediata</div>
+        </div>
     </div>
+</div>
 
-    <div class="col-12 text-end">
-        <a class="btn btn-outline-dark" asp-action="Reporte">Reporte (Imprimir)</a>
-        <a class="btn btn-outline-success" asp-action="ReporteExcel">Reporte (Excel)</a>
-    </div>
-</form>
+<div class="dashboard-actions mt-4">
+    <a class="btn app-btn app-btn-primary" asp-controller="Medicamentos" asp-action="Index">
+        Ir a Medicamentos
+    </a>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Estado</th>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Lab</th>
-            <th>Vence</th>
-            <th>Stock</th>
-            <th>Venta</th>
-            <th>Receta</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var m in Model)
-        {
-            var vencido = m.FechaVencimiento < hoy;
-            var porVencer = !vencido && m.FechaVencimiento <= hoy.AddDays(30);
-            var stockBajo = m.Stock <= m.StockMinimo;
+    <a class="btn app-btn app-btn-outline" asp-controller="Medicamentos" asp-action="Reporte">
+        Reporte (Imprimir)
+    </a>
 
-            <tr>
-                <td>
-                    @if (!m.Activo)
-                    {
-                        <span class="badge bg-secondary">Inactivo</span>
-                    }
-                    else if (vencido)
-                    {
-                        <span class="badge bg-danger">Vencido</span>
-                    }
-                    else if (porVencer)
-                    {
-                        <span class="badge bg-warning text-dark">Por vencer</span>
-                    }
-                    else if (stockBajo)
-                    {
-                        <span class="badge bg-info text-dark">Stock bajo</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">OK</span>
-                    }
-                </td>
-                <td>@m.Codigo</td>
-                <td>@m.Nombre</td>
-                <td>@m.Laboratorio</td>
-                <td>@m.FechaVencimiento.ToString("dd/MM/yyyy")</td>
-                <td>@m.Stock / Min: @m.StockMinimo</td>
-                <td>@m.PrecioVenta.ToString("0.00")</td>
-                <td>@(m.RequiereReceta ? "Sí" : "No")</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@m.Id">Editar</a>
-                    <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@m.Id">Ver</a>
-                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@m.Id">Desactivar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <a class="btn app-btn app-btn-success" asp-controller="Medicamentos" asp-action="ReporteExcel">
+        Reporte (Excel)
+    </a>
+
+    <a class="btn app-btn app-btn-danger" asp-controller="Medicamentos" asp-action="ReportePdf">
+        Reporte (PDF)
+    </a>
+</div>
