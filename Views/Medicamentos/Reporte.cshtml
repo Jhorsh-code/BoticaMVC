@@ -1,0 +1,50 @@
+﻿@model List<BoticaMVC.Models.Medicamento>
+@{
+    ViewData["Title"] = "Reporte";
+}
+
+<h2>Reporte de Medicamentos (Inventario)</h2>
+<p>Fecha: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+
+<div class="mb-3">
+   
+    <button class="btn btn-dark" onclick="window.print()">Imprimir</button>
+    <a class="btn btn-outline-danger" asp-action="ReportePdf">Guardar PDF</a>
+    <a class="btn btn-secondary" asp-action="Index">Volver</a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Lab</th>
+            <th>Presentación</th>
+            <th>Lote</th>
+            <th>Vence</th>
+            <th>Stock</th>
+            <th>Min</th>
+            <th>Venta</th>
+            <th>Receta</th>
+            <th>Ubicación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.Codigo</td>
+                <td>@m.Nombre</td>
+                <td>@m.Laboratorio</td>
+                <td>@m.Presentacion</td>
+                <td>@m.Lote</td>
+                <td>@m.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+                <td>@m.Stock</td>
+                <td>@m.StockMinimo</td>
+                <td>@m.PrecioVenta.ToString("0.00")</td>
+                <td>@(m.RequiereReceta ? "Sí" : "No")</td>
+                <td>@m.Ubicacion</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,25 @@
+﻿@model BoticaMVC.Models.Medicamento
+@{
+    ViewData["Title"] = "Detalle";
+}
+
+<h2>Detalle de Medicamento</h2>
+
+<table class="table table-bordered">
+    <tr><th>Código</th><td>@Model.Codigo</td></tr>
+    <tr><th>Nombre</th><td>@Model.Nombre</td></tr>
+    <tr><th>Laboratorio</th><td>@Model.Laboratorio</td></tr>
+    <tr><th>Presentación</th><td>@Model.Presentacion</td></tr>
+    <tr><th>Lote</th><td>@Model.Lote</td></tr>
+    <tr><th>Vencimiento</th><td>@Model.FechaVencimiento.ToString("dd/MM/yyyy")</td></tr>
+    <tr><th>Stock</th><td>@Model.Stock</td></tr>
+    <tr><th>Stock mínimo</th><td>@Model.StockMinimo</td></tr>
+    <tr><th>Compra</th><td>@Model.PrecioCompra.ToString("0.00")</td></tr>
+    <tr><th>Venta</th><td>@Model.PrecioVenta.ToString("0.00")</td></tr>
+    <tr><th>Requiere receta</th><td>@(Model.RequiereReceta ? "Sí" : "No")</td></tr>
+    <tr><th>Ubicación</th><td>@Model.Ubicacion</td></tr>
+    <tr><th>Activo</th><td>@(Model.Activo ? "Sí" : "No")</td></tr>
+</table>
+
+<a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+<a class="btn btn-secondary" asp-action="Index">Volver</a>
