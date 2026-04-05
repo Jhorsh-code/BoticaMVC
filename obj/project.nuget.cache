@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "g81osdiqYc0=",
+  "dgSpecHash": "n4OLGHBCBEU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\JHORSH\\Documents\\Desarrollo De Soluciones Empresariales\\BoticaMVC\\BoticaMVC.csproj",
+  "projectFilePath": "C:\\Users\\JHORSH\\Documents\\Aplicaciònes  web\\BoticaMVC\\BoticaMVC.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\JHORSH\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\JHORSH\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

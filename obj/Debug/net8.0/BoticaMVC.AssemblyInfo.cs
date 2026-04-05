@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BoticaMVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe681cea070e6b09cf4956ec78a1787deaa6760c")]
 [assembly: System.Reflection.AssemblyProductAttribute("BoticaMVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BoticaMVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

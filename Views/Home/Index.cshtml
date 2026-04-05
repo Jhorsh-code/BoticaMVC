@@ -1,56 +1,62 @@
 ﻿@model BoticaMVC.ViewModels.DashboardVM
+
 @{
-    ViewData["Title"] = "Inicio - Botica";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="mb-3">
-    <h2 class="mb-0">Dashboard - Botica</h2>
-    <p class="text-muted">Resumen del inventario (solo medicamentos activos)</p>
+<div class="dashboard-header mb-4">
+    <h1 class="dashboard-title">Dashboard - Botica</h1>
+    <p class="dashboard-subtitle">Resumen general del inventario de medicamentos activos</p>
 </div>
 
-<div class="row g-3">
-    <div class="col-md-3">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h6 class="text-muted">Total medicamentos</h6>
-                <h2 class="mb-0">@Model.TotalMedicamentos</h2>
-            </div>
+<div class="row g-4 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-primary">
+            <div class="summary-card-label">Total medicamentos</div>
+            <div class="summary-card-value">@Model.TotalMedicamentos</div>
+            <div class="summary-card-help">Medicamentos activos registrados</div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-warning">
-            <div class="card-body">
-                <h6 class="text-muted">Stock bajo</h6>
-                <h2 class="mb-0">@Model.StockBajo</h2>
-                <small class="text-muted">Stock ≤ Stock mínimo</small>
-            </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-warning">
+            <div class="summary-card-label">Stock bajo</div>
+            <div class="summary-card-value">@Model.StockBajo</div>
+            <div class="summary-card-help">Stock igual o menor al mínimo</div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-danger">
-            <div class="card-body">
-                <h6 class="text-muted">Vencidos</h6>
-                <h2 class="mb-0">@Model.Vencidos</h2>
-            </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-danger">
+            <div class="summary-card-label">Vencidos</div>
+            <div class="summary-card-value">@Model.Vencidos</div>
+            <div class="summary-card-help">Medicamentos fuera de fecha</div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-info">
-            <div class="card-body">
-                <h6 class="text-muted">Por vencer (30 días)</h6>
-                <h2 class="mb-0">@Model.PorVencer30Dias</h2>
-            </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="summary-card summary-card-info">
+            <div class="summary-card-label">Por vencer (30 días)</div>
+            <div class="summary-card-value">@Model.PorVencer30Dias</div>
+            <div class="summary-card-help">Requieren atención inmediata</div>
         </div>
     </div>
 </div>
 
-<hr class="my-4" />
+<div class="dashboard-actions">
+    <a class="btn app-btn app-btn-primary" asp-controller="Medicamentos" asp-action="Index">
+        Ir a Medicamentos
+    </a>
 
-<div class="d-flex gap-2">
-    <a class="btn btn-primary" asp-controller="Medicamentos" asp-action="Index">Ir a Medicamentos</a>
-    <a class="btn btn-outline-dark" asp-controller="Medicamentos" asp-action="Reporte">Reporte (Imprimir)</a>
-    <a class="btn btn-outline-success" asp-controller="Medicamentos" asp-action="ReporteExcel">Reporte (Excel)</a>
+    <a class="btn app-btn app-btn-outline" asp-controller="Medicamentos" asp-action="Reporte">
+        Reporte (Imprimir)
+    </a>
+
+    <a class="btn app-btn app-btn-success" asp-controller="Medicamentos" asp-action="ReporteExcel">
+        Reporte (Excel)
+    </a>
+
+    <a class="btn app-btn app-btn-danger" asp-controller="Medicamentos" asp-action="ReportePdf">
+        Reporte (PDF)
+    </a>
 </div>

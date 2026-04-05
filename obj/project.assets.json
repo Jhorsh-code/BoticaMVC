@@ -7835,11 +7835,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\JHORSH\\Documents\\Desarrollo De Soluciones Empresariales\\BoticaMVC\\BoticaMVC.csproj",
+      "projectUniqueName": "C:\\Users\\JHORSH\\Documents\\Aplicaciònes  web\\BoticaMVC\\BoticaMVC.csproj",
       "projectName": "BoticaMVC",
-      "projectPath": "C:\\Users\\JHORSH\\Documents\\Desarrollo De Soluciones Empresariales\\BoticaMVC\\BoticaMVC.csproj",
+      "projectPath": "C:\\Users\\JHORSH\\Documents\\Aplicaciònes  web\\BoticaMVC\\BoticaMVC.csproj",
       "packagesPath": "C:\\Users\\JHORSH\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\JHORSH\\Documents\\Desarrollo De Soluciones Empresariales\\BoticaMVC\\obj\\",
+      "outputPath": "C:\\Users\\JHORSH\\Documents\\Aplicaciònes  web\\BoticaMVC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
