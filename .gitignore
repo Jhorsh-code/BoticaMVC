@@ -1,8 +1,6 @@
 .vs/
-*.user
-*.suo
-*.cache
-*.vsidx
 bin/
 obj/
-*.log
+*.user
+*.suo
+*.vsidx
