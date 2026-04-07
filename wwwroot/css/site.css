@@ -145,3 +145,21 @@
     background-color: #f8fafc;
     color: #94a3b8;
 }
+
+.pos-search-results {
+    min-height: 80px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+}
+
+.pos-result-item:hover {
+    background: #f8fafc;
+}
+
+.pos-summary-box {
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+    padding: 1rem;
+}

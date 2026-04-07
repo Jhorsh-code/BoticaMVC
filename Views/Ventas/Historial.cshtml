@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BoticaMVC.Models.Venta>
+
+@{
+    ViewData["Title"] = "Historial de Ventas";
+}
+
+<h2 class="mb-4">Historial de Ventas</h2>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Comprobante</th>
+                        <th>Cliente</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>@v.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@v.TipoComprobante - @v.Serie-@v.NumeroComprobante</td>
+                            <td>@(v.Cliente?.NombreCompleto ?? "Sin nombre")</td>
+                            <td class="text-end">S/ @v.Total.ToString("0.00")</td>
+                            <td class="text-center">
+                                <a asp-action="Comprobante" asp-route-id="@v.Id" class="btn btn-sm btn-outline-primary">Ver</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
