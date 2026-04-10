@@ -1,0 +1,75 @@
+﻿@model BoticaMVC.Models.Venta
+
+@{
+    ViewData["Title"] = "Comprobante";
+}
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <h2 class="mb-1">Comprobante de Venta</h2>
+                <div class="text-muted">@Model.TipoComprobante - @Model.Serie-@Model.NumeroComprobante</div>
+            </div>
+            <div class="text-end">
+                <div><strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h5>Cliente</h5>
+            <div><strong>Nombre:</strong> @(Model.Cliente?.NombreCompleto ?? "Sin nombre")</div>
+            <div><strong>Documento:</strong> @(Model.Cliente?.Documento ?? "-")</div>
+            <div><strong>Dirección:</strong> @(Model.Cliente?.Direccion ?? "-")</div>
+        </div>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th>
+                        <th>Medicamento</th>
+                        <th class="text-end">Cantidad</th>
+                        <th class="text-end">P. Unitario</th>
+                        <th class="text-end">Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in Model.Detalles)
+                    {
+                        <tr>
+                            <td>@d.Medicamento.Codigo</td>
+                            <td>@d.Medicamento.Nombre</td>
+                            <td class="text-end">@d.Cantidad</td>
+                            <td class="text-end">S/ @d.PrecioUnitario.ToString("0.00")</td>
+                            <td class="text-end">S/ @d.Importe.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <strong>S/ @Model.SubTotal.ToString("0.00")</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>IGV:</span>
+                    <strong>S/ @Model.Igv.ToString("0.00")</strong>
+                </div>
+                <div class="d-flex justify-content-between fs-5">
+                    <span>Total:</span>
+                    <strong>S/ @Model.Total.ToString("0.00")</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Nueva venta</a>
+            <a asp-action="Historial" class="btn btn-outline-dark">Historial</a>
+        </div>
+    </div>
+</div>

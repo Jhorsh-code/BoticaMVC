@@ -1,3 +1,31 @@
+<<<<<<< HEAD
+.dashboard-header {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: #0f172a;
+}
+
+.dashboard-subtitle {
+    color: #64748b;
+    font-size: 1.02rem;
+    margin-bottom: 0;
+}
+
+.summary-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 1.35rem;
+    min-height: 180px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+=======
 html {
     font-size: 14px;
     position: relative;
@@ -104,6 +132,7 @@ body.app-body {
         box-shadow: 0 16px 30px rgba(15, 23, 42, 0.10);
     }
 
+>>>>>>> origin/main
 .summary-card-label {
     font-size: 1rem;
     font-weight: 600;
@@ -119,7 +148,11 @@ body.app-body {
 
 .summary-card-help {
     font-size: 0.95rem;
+<<<<<<< HEAD
+    color: #64748b;
+=======
     color: var(--color-text-soft);
+>>>>>>> origin/main
 }
 
 .summary-card-primary {
@@ -128,17 +161,29 @@ body.app-body {
 }
 
 .summary-card-warning {
+<<<<<<< HEAD
+    border-top: 5px solid #d97706;
+=======
     border-top: 5px solid var(--color-warning);
+>>>>>>> origin/main
     background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
 }
 
 .summary-card-danger {
+<<<<<<< HEAD
+    border-top: 5px solid #dc2626;
+=======
     border-top: 5px solid var(--color-danger);
+>>>>>>> origin/main
     background: linear-gradient(180deg, #fef2f2 0%, #ffffff 100%);
 }
 
 .summary-card-info {
+<<<<<<< HEAD
+    border-top: 5px solid #0284c7;
+=======
     border-top: 5px solid var(--color-info);
+>>>>>>> origin/main
     background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
 }
 
@@ -152,7 +197,10 @@ body.app-body {
     border-radius: 12px;
     font-weight: 600;
     padding: 0.72rem 1.2rem;
+<<<<<<< HEAD
+=======
     transition: 0.2s ease-in-out;
+>>>>>>> origin/main
 }
 
 .app-btn-primary {
@@ -202,6 +250,50 @@ body.app-body {
         color: #ffffff;
     }
 
+<<<<<<< HEAD
+.botica-pagination .page-link {
+    border-radius: 10px;
+    margin: 0 4px;
+    color: #1e3a8a;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    min-width: 42px;
+    text-align: center;
+}
+
+.botica-pagination .page-item.active .page-link {
+    background-color: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+
+.botica-pagination .page-link:hover {
+    background-color: #e0ecff;
+}
+
+.botica-pagination .page-item.disabled .page-link {
+    background-color: #f8fafc;
+    color: #94a3b8;
+}
+
+.pos-search-results {
+    min-height: 80px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+}
+
+.pos-result-item:hover {
+    background: #f8fafc;
+}
+
+.pos-summary-box {
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+    padding: 1rem;
+}
+=======
 .app-footer {
     margin-top: auto;
     border-top: 1px solid var(--color-border);
@@ -217,3 +309,4 @@ body.app-body {
 .form-check-input:focus {
     box-shadow: 0 0 0 0.12rem white, 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
 }
+>>>>>>> origin/main

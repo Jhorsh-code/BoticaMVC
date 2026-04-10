@@ -1,0 +1,307 @@
+﻿@model BoticaMVC.ViewModels.VentaPOSVM
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Punto de Venta";
+    var medicamentosJson = JsonSerializer.Serialize(
+        Model.MedicamentosDisponibles,
+        new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach (var item in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@item.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-action="RegistrarVenta" method="post" id="formVenta">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Buscar medicamento</label>
+                            <input type="text" id="txtBuscarMedicamento" class="form-control" placeholder="Buscar por código, nombre o laboratorio..." />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo de comprobante</label>
+                            <select asp-for="TipoComprobante" class="form-select">
+                                <option value="Boleta">Boleta</option>
+                                <option value="Factura">Factura</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pos-search-results border rounded-4 mb-4" id="resultadosMedicamentos"></div>
+                    </div>
+
+                    <h5 class="mb-3">Detalle de venta</h5>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Medicamento</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-end">Importe</th>
+                                    <th class="text-center">Acción</th>
+                                </tr>
+                            </thead>
+                        <tbody id="detalleVentaBody">
+                            <tr id="filaVacia">
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No hay productos agregados a la venta.
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+
+                <input asp-for="ItemsJson" type="hidden" id="ItemsJson" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Datos del cliente</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre completo</label>
+                        <input asp-for="ClienteNombre" class="form-control" placeholder="Cliente" />
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo</label>
+                            <select asp-for="ClienteTipoDocumento" class="form-select">
+                                <option value="DNI">DNI</option>
+                                <option value="RUC">RUC</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Documento</label>
+                            <input asp-for="ClienteDocumento" class="form-control" placeholder="N° documento" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Dirección</label>
+                        <input asp-for="ClienteDireccion" class="form-control" placeholder="Dirección" />
+                    </div>
+
+                    <h5 class="mb-3">Resumen de pago</h5>
+
+                    <div class="pos-summary-box">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <strong id="lblSubTotal">S/ 0.00</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>IGV (18%):</span>
+                            <strong id="lblIgv">S/ 0.00</strong>
+                        </div>
+                        <hr />
+                        <div class="d-flex justify-content-between fs-5">
+                            <span>Total:</span>
+                            <strong id="lblTotal">S/ 0.00</strong>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn app-btn app-btn-success">Registrar Venta</button>
+                        <a asp-action="Historial" class="btn app-btn app-btn-outline">Ver Historial</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    <script>
+        const medicamentos = @Html.Raw(medicamentosJson);
+        let carrito = [];
+
+        const txtBuscar = document.getElementById("txtBuscarMedicamento");
+        const resultados = document.getElementById("resultadosMedicamentos");
+        const detalleBody = document.getElementById("detalleVentaBody");
+        const itemsJson = document.getElementById("ItemsJson");
+
+        function filtrarMedicamentos(texto) {
+            const valor = texto.toLowerCase().trim();
+
+            if (!valor) {
+                resultados.innerHTML = "";
+                return;
+            }
+
+            const filtrados = medicamentos.filter(m =>
+                m.codigo.toLowerCase().includes(valor) ||
+                m.nombre.toLowerCase().includes(valor) ||
+                m.laboratorio.toLowerCase().includes(valor)
+            ).slice(0, 8);
+
+            if (filtrados.length === 0) {
+                resultados.innerHTML = `<div class="p-3 text-muted">No se encontraron medicamentos.</div>`;
+                return;
+            }
+
+            resultados.innerHTML = filtrados.map(m => `
+                <div class="pos-result-item d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div>
+                        <div class="fw-semibold">${m.nombre}</div>
+                        <div class="small text-muted">${m.codigo} - ${m.laboratorio}</div>
+                        <div class="small text-muted">Stock: ${m.stock}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold mb-2">S/ ${Number(m.precioVenta).toFixed(2)}</div>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="agregarAlCarrito(${m.id})">Agregar</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function agregarAlCarrito(id) {
+            const med = medicamentos.find(x => x.id === id);
+            if (!med) return;
+
+            const itemExistente = carrito.find(x => x.medicamentoId === id);
+
+            if (itemExistente) {
+                if (itemExistente.cantidad < med.stock) {
+                    itemExistente.cantidad += 1;
+                }
+            } else {
+                carrito.push({
+                    medicamentoId: med.id,
+                    codigo: med.codigo,
+                    nombre: med.nombre,
+                    precio: Number(med.precioVenta),
+                    cantidad: 1,
+                    stock: med.stock
+                });
+            }
+
+            renderCarrito();
+        }
+
+            function cambiarCantidad(id, delta) {
+            const item = carrito.find(x => x.medicamentoId === id);
+            if (!item) return;
+
+            item.cantidad += delta;
+
+            if (item.cantidad <= 0) {
+                carrito = carrito.filter(x => x.medicamentoId !== id);
+            } else if (item.cantidad > item.stock) {
+                item.cantidad = item.stock;
+            }
+
+            renderCarrito();
+        }
+
+        function eliminarItem(id) {
+            carrito = carrito.filter(x => x.medicamentoId !== id);
+            renderCarrito();
+        }
+
+        function renderCarrito() {
+            if (carrito.length === 0) {
+                detalleBody.innerHTML = `
+                    <tr id="filaVacia">
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No hay productos agregados a la venta.
+                        </td>
+                    </tr>`;
+            } else {
+                detalleBody.innerHTML = carrito.map(item => {
+                    const importe = item.precio * item.cantidad;
+                    return `
+                        <tr>
+                            <td>${item.codigo}</td>
+                            <td>${item.nombre}</td>
+                            <td class="text-end">S/ ${item.precio.toFixed(2)}</td>
+                            <td class="text-center">
+                                <div class="d-inline-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="cambiarCantidad(${item.medicamentoId}, -1)">-</button>
+                                    <span>${item.cantidad}</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="cambiarCantidad(${item.medicamentoId}, 1)">+</button>
+                                </div>
+                            </td>
+                            <td class="text-end">S/ ${importe.toFixed(2)}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarItem(${item.medicamentoId})">Quitar</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+
+            const subtotal = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+            const igv = subtotal * 0.18;
+            const total = subtotal + igv;
+
+            document.getElementById("lblSubTotal").innerText = `S/ ${subtotal.toFixed(2)}`;
+            document.getElementById("lblIgv").innerText = `S/ ${igv.toFixed(2)}`;
+            document.getElementById("lblTotal").innerText = `S/ ${total.toFixed(2)}`;
+
+             itemsJson.value = JSON.stringify(
+            carrito
+                .filter(item => item.cantidad > 0)
+                .map(item => ({
+                    medicamentoId: item.medicamentoId,
+                    codigo: item.codigo,
+                    nombre: item.nombre,
+                    precio: item.precio,
+                    cantidad: item.cantidad
+                }))
+        );
+        }
+
+        txtBuscar.addEventListener("input", function () {
+            filtrarMedicamentos(this.value);
+        });
+
+        txtBuscar.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
+        });
+
+        renderCarrito();
+
+        document.getElementById("formVenta").addEventListener("submit", function (e) {
+            const items = carrito.filter(x => x.cantidad > 0);
+
+            if (items.length === 0) {
+                e.preventDefault();
+                alert("Debe agregar al menos un medicamento a la venta.");
+                return;
+            }
+
+            itemsJson.value = JSON.stringify(items.map(item => ({
+                medicamentoId: item.medicamentoId,
+                codigo: item.codigo,
+                nombre: item.nombre,
+                precio: item.precio,
+                cantidad: item.cantidad
+            })));
+        });
+    </script>
+
+}

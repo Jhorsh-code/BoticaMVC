@@ -1,13 +1,14 @@
 ﻿using BoticaMVC.Data;
 using BoticaMVC.Models;
+using BoticaMVC.ViewModels;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-
+using System.IO;
+using BoticaMVC.ViewModels;
 
 namespace BoticaMVC.Controllers
 {
@@ -20,8 +21,10 @@ namespace BoticaMVC.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string? q, string orden = "nombre", bool soloActivos = true)
+        public async Task<IActionResult> Index(string? q, string orden = "codigo", bool soloActivos = true, int pagina = 1)
         {
+            int tamPagina = 10;
+
             IQueryable<Medicamento> query = _context.Medicamentos;
 
             if (soloActivos)
@@ -45,11 +48,43 @@ namespace BoticaMVC.Controllers
                 _ => query.OrderBy(m => m.Nombre)
             };
 
-            ViewBag.Q = q ?? "";
-            ViewBag.Orden = orden;
-            ViewBag.SoloActivos = soloActivos;
+            int totalRegistros = await query.CountAsync();
+            int totalPaginas = (int)Math.Ceiling(totalRegistros / (double)tamPagina);
 
-            return View(await query.AsNoTracking().ToListAsync());
+            if (totalPaginas == 0)
+                totalPaginas = 1;
+
+            if (pagina < 1)
+                pagina = 1;
+
+            if (pagina > totalPaginas)
+                pagina = totalPaginas;
+
+            var lista = await query
+                .Skip((pagina - 1) * tamPagina)
+                .Take(tamPagina)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var vm = new MedicamentosIndexVM
+            {
+                Items = lista,
+                Q = q ?? "",
+                Orden = orden,
+                SoloActivos = soloActivos,
+                PaginaActual = pagina,
+                TotalPaginas = totalPaginas,
+                TotalRegistros = totalRegistros,
+                TamPagina = tamPagina
+            };
+
+            ViewBag.Q = vm.Q;
+            ViewBag.Orden = vm.Orden;
+            ViewBag.SoloActivos = vm.SoloActivos;
+            ViewBag.PaginaActual = vm.PaginaActual;
+            ViewBag.TotalPaginas = vm.TotalPaginas;
+
+            return View(vm);
         }
 
 
