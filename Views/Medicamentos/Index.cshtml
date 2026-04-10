@@ -1,83 +1,18 @@
-<<<<<<< HEAD
-﻿@model BoticaMVC.ViewModels.MedicamentosIndexVM
-=======
-﻿@model IEnumerable<BoticaMVC.Models.Medicamento>
->>>>>>> origin/main
+@model BoticaMVC.ViewModels.MedicamentosIndexVM
 
 @{
     ViewData["Title"] = "Medicamentos";
 
     var q = ViewBag.Q as string ?? "";
-    var orden = ViewBag.Orden as string ?? "nombre";
+    var orden = ViewBag.Orden as string ?? "codigo";
     var soloActivos = ViewBag.SoloActivos is bool b ? b : true;
 
     var hoy = DateTime.Today;
     var limite30 = hoy.AddDays(30);
 }
 
-<<<<<<< HEAD
-<h2 class="mb-3">Medicamentos (Inventario)</h2>
-
-@if (TempData["ok"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["ok"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
-
-<form method="get" asp-action="Index" class="row g-2 mb-4">
-
-    <div class="col-md-5">
-        <input class="form-control"
-               name="q"
-               value="@ViewBag.Q"
-               placeholder="Buscar por nombre, código, lote o laboratorio..." />
-    </div>
-
-    <div class="col-md-2">
-        <select class="form-select" name="orden">
-            <option value="codigo" selected="@(ViewBag.Orden == "codigo")">Código</option>
-            <option value="nombre" selected="@(ViewBag.Orden == "nombre")">Nombre</option>
-            <option value="stock" selected="@(ViewBag.Orden == "stock")">Stock</option>
-            <option value="vence" selected="@(ViewBag.Orden == "vence")">Vencimiento</option>
-        </select>
-    </div>
-
-    <div class="col-md-2 d-flex align-items-center">
-        <input type="hidden" name="soloActivos" value="false" />
-        <input type="checkbox"
-               class="form-check-input me-2"
-               id="soloActivos"
-               name="soloActivos"
-               value="true"
-               @(ViewBag.SoloActivos ? "checked" : "") />
-        <label class="form-check-label" for="soloActivos">Solo activos</label>
-    </div>
-
-    <div class="col-md-3 text-end">
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <a class="btn btn-success" asp-action="Create">+ Nuevo</a>
-    </div>
-
-    <div class="col-12 text-end mt-2">
-        <a class="btn btn-outline-dark" asp-action="Reporte">Reporte</a>
-        <a class="btn btn-outline-success" asp-action="ReporteExcel">Excel</a>
-        <a class="btn btn-outline-danger" asp-action="ReportePdf">PDF</a>
-=======
-<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h3 mb-0">Medicamentos</h1>
-        <div class="text-muted">Gestión del inventario (búsqueda, orden y acciones)</div>
-    </div>
-
-    <div class="d-flex gap-2 flex-wrap">
-        <a class="btn app-btn app-btn-success" asp-action="Create">Nuevo</a>
-        <a class="btn app-btn app-btn-outline" asp-action="Reporte">Reporte (Imprimir)</a>
-        <a class="btn app-btn app-btn-outline" asp-action="ReporteExcel">Excel</a>
-        <a class="btn app-btn app-btn-outline" asp-action="ReportePdf">PDF</a>
-    </div>
-</div>
+<h2 class="mb-3">Medicamentos</h2>
+<p class="text-muted mb-4">Gestión del inventario de medicamentos</p>
 
 @if (TempData["ok"] is string okMsg)
 {
@@ -87,7 +22,14 @@
     </div>
 }
 
-<form method="get" class="row g-2 align-items-end mb-3">
+<div class="d-flex gap-2 flex-wrap mb-3">
+    <a class="btn btn-success" asp-action="Create">+ Nuevo</a>
+    <a class="btn btn-outline-dark" asp-action="Reporte">Reporte</a>
+    <a class="btn btn-outline-success" asp-action="ReporteExcel">Excel</a>
+    <a class="btn btn-outline-danger" asp-action="ReportePdf">PDF</a>
+</div>
+
+<form method="get" asp-action="Index" class="row g-2 align-items-end mb-3">
     <div class="col-12 col-md-6 col-lg-4">
         <label class="form-label">Buscar</label>
         <input name="q" value="@q" class="form-control" placeholder="Nombre / Código / Lote / Laboratorio" />
@@ -96,8 +38,8 @@
     <div class="col-12 col-md-3 col-lg-2">
         <label class="form-label">Orden</label>
         <select name="orden" class="form-select">
-            <option value="nombre" selected="@(orden == "nombre")">Nombre</option>
             <option value="codigo" selected="@(orden == "codigo")">Código</option>
+            <option value="nombre" selected="@(orden == "nombre")">Nombre</option>
             <option value="stock" selected="@(orden == "stock")">Stock</option>
             <option value="vence" selected="@(orden == "vence")">Vencimiento</option>
         </select>
@@ -112,17 +54,15 @@
     </div>
 
     <div class="col-12 col-md-6 col-lg-2 d-grid">
-        <button type="submit" class="btn app-btn app-btn-primary">Aplicar</button>
+        <button type="submit" class="btn btn-primary">Aplicar</button>
     </div>
 
     <div class="col-12 col-md-6 col-lg-2 d-grid">
-        <a class="btn app-btn app-btn-outline" asp-action="Index">Limpiar</a>
->>>>>>> origin/main
+        <a class="btn btn-outline-secondary" asp-action="Index">Limpiar</a>
     </div>
 </form>
 
 <div class="table-responsive">
-<<<<<<< HEAD
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-light">
             <tr>
@@ -143,7 +83,7 @@
                 @foreach (var m in Model.Items)
                 {
                     var vencido = m.FechaVencimiento < hoy;
-                    var porVencer = !vencido && m.FechaVencimiento <= hoy.AddDays(30);
+                    var porVencer = !vencido && m.FechaVencimiento <= limite30;
                     var stockBajo = m.Stock <= m.StockMinimo;
 
                     <tr>
@@ -180,52 +120,6 @@
                             <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@m.Id">Editar</a>
                             <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@m.Id">Ver</a>
                             <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@m.Id">Desactivar</a>
-=======
-    <table class="table table-hover align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>Laboratorio</th>
-                <th>Vence</th>
-                <th class="text-end">Stock</th>
-                <th class="text-end">Min</th>
-                <th class="text-end">Venta</th>
-                <th class="text-end">Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var m in Model)
-                {
-                    var stockBajo = m.Stock <= m.StockMinimo;
-                    var vencido = m.FechaVencimiento < hoy;
-                    var porVencer = !vencido && m.FechaVencimiento <= limite30;
-
-                    var badgeStock = stockBajo ? "bg-warning text-dark" : "bg-success";
-                    var badgeVence = vencido ? "bg-danger" : (porVencer ? "bg-warning text-dark" : "bg-success");
-
-                    <tr>
-                        <td class="fw-semibold">@m.Codigo</td>
-                        <td>@m.Nombre</td>
-                        <td>@m.Laboratorio</td>
-                        <td>
-                            <span class="badge @badgeVence">
-                                @m.FechaVencimiento.ToString("dd/MM/yyyy")
-                            </span>
-                        </td>
-                        <td class="text-end">
-                            <span class="badge @badgeStock">@m.Stock</span>
-                        </td>
-                        <td class="text-end">@m.StockMinimo</td>
-                        <td class="text-end">@m.PrecioVenta.ToString("0.00")</td>
-                        <td class="text-end">
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@m.Id">Ver</a>
-                            <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@m.Id">Editar</a>
-                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@m.Id">Eliminar</a>
->>>>>>> origin/main
                         </td>
                     </tr>
                 }
@@ -233,33 +127,26 @@
             else
             {
                 <tr>
-<<<<<<< HEAD
                     <td colspan="9" class="text-center text-muted py-4">
-                        No se encontraron medicamentos.
-=======
-                    <td colspan="8" class="text-center text-muted py-4">
                         No se encontraron medicamentos con los filtros actuales.
->>>>>>> origin/main
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<<<<<<< HEAD
 
 @if (ViewBag.TotalPaginas > 1)
 {
     <nav class="mt-4 d-flex justify-content-center">
         <ul class="pagination botica-pagination">
-
             <li class="page-item @(ViewBag.PaginaActual == 1 ? "disabled" : "")">
                 <a class="page-link"
-                   asp-action="Index"
-                   asp-route-q="@ViewBag.Q"
-                   asp-route-orden="@ViewBag.Orden"
-                   asp-route-soloActivos="@ViewBag.SoloActivos"
-                   asp-route-pagina="@(ViewBag.PaginaActual - 1)">
+                       asp-action="Index"
+                       asp-route-q="@ViewBag.Q"
+                       asp-route-orden="@ViewBag.Orden"
+                       asp-route-soloActivos="@ViewBag.SoloActivos"
+                       asp-route-pagina="@(ViewBag.PaginaActual - 1)">
                     Anterior
                 </a>
             </li>
@@ -268,11 +155,11 @@
             {
                 <li class="page-item @(i == (int)ViewBag.PaginaActual ? "active" : "")">
                     <a class="page-link"
-                       asp-action="Index"
-                       asp-route-q="@ViewBag.Q"
-                       asp-route-orden="@ViewBag.Orden"
-                       asp-route-soloActivos="@ViewBag.SoloActivos"
-                       asp-route-pagina="@i">
+                           asp-action="Index"
+                           asp-route-q="@ViewBag.Q"
+                           asp-route-orden="@ViewBag.Orden"
+                           asp-route-soloActivos="@ViewBag.SoloActivos"
+                           asp-route-pagina="@i">
                         @i
                     </a>
                 </li>
@@ -280,17 +167,15 @@
 
             <li class="page-item @(ViewBag.PaginaActual == ViewBag.TotalPaginas ? "disabled" : "")">
                 <a class="page-link"
-                   asp-action="Index"
-                   asp-route-q="@ViewBag.Q"
-                   asp-route-orden="@ViewBag.Orden"
-                   asp-route-soloActivos="@ViewBag.SoloActivos"
-                   asp-route-pagina="@(ViewBag.PaginaActual + 1)">
+                       asp-action="Index"
+                       asp-route-q="@ViewBag.Q"
+                       asp-route-orden="@ViewBag.Orden"
+                       asp-route-soloActivos="@ViewBag.SoloActivos"
+                       asp-route-pagina="@(ViewBag.PaginaActual + 1)">
                     Siguiente
                 </a>
             </li>
-
         </ul>
     </nav>
 }
-=======
->>>>>>> origin/main
+}
